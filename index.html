@@ -1,49 +1,247 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+    <title>reveal.js</title>
 
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css">
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h1>Dependency management in GO</h1>
+        </section>
+        <section>
+            <h2>About me</h2>
+            <p align="left">Adam Szecówka<br/>
+                Senior Software Developer @SAP Hybris<br/>
+                adam.szecowka(at)gmail.com<br/>
+            </p>
+        </section>
 
-		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.js"></script>
+        <section>
+            <h2>Agenda</h2>
+            <ul>
+                <li>go get</li>
+                <li>vendor directory</li>
+                <li>dep</li>
+            </ul>
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
-				]
-			});
-		</script>
-	</body>
+        </section>
+
+        <section>
+            <section><h2>The simplest approach: go get</h2></section>
+            <section>
+                <h2>Example</h2>
+                <p>Visit <a href="https://github.com/avelino/awesome-go">https://github.com/avelino/awesome-go</a></p>
+                <pre><code>go get github.com/hackebrot/turtle</code></pre>
+                <pre><code>import (
+  "fmt"
+  "github.com/hackebrot/turtle"
+)
+
+func main() {
+  comp := turtle.Emojis["computer"]
+  fmt.Println(comp)
+}</code></pre>
+            </section>
+
+
+            <section>
+                <h2>Go get problems</h2>
+                <ul>
+                    <li>fetches only from master</li>
+                    <li>it works on my machine!</li>
+                    <li>leftpad case<br/>
+                        <a href="https://www.theregister.co.uk/2016/03/23/npm_left_pad_chaos/">www.theregister.co.uk/2016/03/23/npm_left_pad_chaos/</a>
+                        <q>How one developer just broke Node, Babel and thousands of projects in 11 lines of
+                            JavaScript</q>
+                    </li>
+                </ul>
+            </section>
+
+        </section>
+
+        <section>
+            <section>
+                <h2>Vendor directory</h2>
+                <blockquote>Go 1.6 includes support for using local copies of external dependencies to satisfy imports
+                    of
+                    those dependencies, often referred to as vendoring.
+                </blockquote>
+            </section>
+            <section>
+                <h2>Vendor directory</h2>
+                <ul>
+                    <li>"vendor" is importable only by code in the directory tree rooted at the parent of "vendor", and
+                        only
+                        using an import path that omits the prefix up to and including the vendor element.
+                    </li>
+                    <li>Code in vendor directories deeper in the source tree shadows code in higher directories</li>
+                </ul>
+
+
+            </section>
+
+            <section>
+                <h3>How to propagate vendor directory?</h3>
+                <div>
+                    <img src="img/popularity.png" height="400px"/>
+                    <a href="https://github.com/blindpirate/report-of-build-tools-for-java-and-golang">github.com/blindpirate/report-of-build-tools-for-java-and-golang</a>
+                </div>
+            </section>
+        </section>
+
+        <section>
+
+            <section>
+                <h2>Dep</h2>
+                <div>
+                    <img src="img/DigbyShadows.png" width="300px"/>
+                    <img align="left" src="img/dep-project-status.png"/>
+                </div>
+            </section>
+
+            <section>
+                <h2>Dep</h2>
+                <img src="img/dep_commands.png"/>
+            </section>
+            <section>
+                <h2>Dep Workflow</h2>
+                <ol>
+                    <li>dep init - for new project or for migration</li>
+                    <li>write code, add dependencies</li>
+                    <li>dep ensure</li>
+                    <li>goto 2</li>
+                </ol>
+
+            </section>
+            <section>
+                <h2>Supported importers</h2>
+                <pre><code>
+// BuildAll returns a slice of all the importers.
+func BuildAll(logger *log.Logger, verbose bool, sm gps.SourceManager) []Importer {
+	return []Importer{
+		glide.NewImporter(logger, verbose, sm),
+		godep.NewImporter(logger, verbose, sm),
+		vndr.NewImporter(logger, verbose, sm),
+		govend.NewImporter(logger, verbose, sm),
+		gvt.NewImporter(logger, verbose, sm),
+		govendor.NewImporter(logger, verbose, sm),
+		glock.NewImporter(logger, verbose, sm),
+	}
+}
+</code></pre>
+                <a href="https://github.com/golang/dep/blob/master/internal/importers/importers.go">github.com/golang/dep/blob/master
+                    /internal/importers/importers.go</a>
+
+            </section>
+            <section>
+                <h2>Dep ensure meaning</h2>
+                <blockquote>
+                    Hey dep, please make sure that my project is in sync: that Gopkg.lock satisfies all the imports in
+                    my project, and all the rules in Gopkg.toml, and that vendor/ contains exactly what Gopkg.lock says
+                    it should."
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>Dep ensure</h2>
+                <blockquote>
+                    Dep's main command is dep ensure. The verb is "ensure" to imply that the action is not just some
+                    single, discrete action (like adding a dependency), but enforcing some kind of broader guarantee.
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>Dep - under the hood</h2>
+                <img src="img/dep-phases.png"/>
+            </section>
+
+            <section>
+                <h2>Gopkg.toml</h2>
+                <p>
+                    The Gopkg.toml file is initially generated by dep init, and is primarily hand-edited. It contains
+                    several types of rule declarations that govern dep's behavior
+                </p>
+            </section>
+
+            <section>
+                <h2>Gopkg.lock</h2>
+                <ul>
+                    <li>
+                        The Gopkg.lock file is generated by dep ensure and dep init. It is the output of the solving
+                        function: a transitively complete snapshot of a project's dependency graph.
+                    </li>
+                    <li>
+                        Gopkg.lock always includes a revision for all listed dependencies, as the semantics of revision
+                        guarantee them to be immutable.
+                    </li>
+                    <li>
+                        Gopkg.lock is autogenerated; editing it manually is generally an antipattern.
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Dep - Live demo</h2>
+            </section>
+
+            <section>
+                <h1>Resources:</h1>
+                <a target="_blank" href="https://github.com/golang/dep">github.com/golang/dep</a>
+                <a target="_blank" href="http://github.com/aszecowka/depworkshop">github.com/aszecowka/depworkshop</a>
+                <a target="_blank" href="http://github.com/aszecowka/calc">github.com/aszecowka/calc</a>
+                <a target="_blank" href="http://github.com/aszecowka/logger">github.com/aszecowka/logger</a>
+
+            </section>
+
+            <section>
+                <img src="img/hackin-gliwice.jpeg"/>
+            </section>
+
+            <section>
+                <h1>Thank you!</h1>
+            </section>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        dependencies: [
+            {src: 'plugin/markdown/marked.js'},
+            {src: 'plugin/markdown/markdown.js'},
+            {src: 'plugin/notes/notes.js', async: true},
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+            }
+        ]
+    });
+</script>
+</body>
 </html>
