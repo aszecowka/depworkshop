@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../calc/calc.iml" filepath="$PROJECT_DIR$/../calc/calc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../depex3/depex3.iml" filepath="$PROJECT_DIR$/../depex3/depex3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/depworkshop.iml" filepath="$PROJECT_DIR$/.idea/depworkshop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../logger/logger.iml" filepath="$PROJECT_DIR$/../logger/logger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../ml/ml.iml" filepath="$PROJECT_DIR$/../ml/ml.iml" />
+    </modules>
+  </component>
+</project>
